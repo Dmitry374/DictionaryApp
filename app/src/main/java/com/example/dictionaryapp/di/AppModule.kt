@@ -2,6 +2,7 @@ package com.example.dictionaryapp.di
 
 import com.example.dictionaryapp.BuildConfig
 import com.example.dictionaryapp.common.Constants
+import com.example.dictionaryapp.domain.WordsInteractor
 import com.example.dictionaryapp.network.ApiService
 import dagger.Module
 import dagger.Provides
@@ -42,5 +43,11 @@ class AppModule {
         return OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideWordsInteractor(): WordsInteractor {
+        return WordsInteractor()
     }
 }
