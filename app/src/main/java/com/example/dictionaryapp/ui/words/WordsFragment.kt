@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,10 +22,6 @@ import javax.inject.Inject
 
 class WordsFragment : Fragment() {
 
-    companion object {
-        const val LANGUAGE_KEY = "language_key"
-    }
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -35,7 +33,9 @@ class WordsFragment : Fragment() {
 
     }
 
-    private var wordsLanguage = Constants.LANGUAGE_EN
+    private val inputMethodManager: InputMethodManager by lazy {
+        activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -54,7 +54,10 @@ class WordsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        wordsLanguage = savedInstanceState?.getString(LANGUAGE_KEY) ?: Constants.LANGUAGE_EN
+        if (savedInstanceState == null) {
+            wordsViewModel.searchWords()
+            wordsViewModel.loadAllWordsByLanguage(wordsViewModel.wordsLanguage)
+        }
 
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
         toolbar.title = resources.getString(R.string.words)
@@ -65,16 +68,16 @@ class WordsFragment : Fragment() {
             when (item.itemId) {
                 R.id.en_ru -> {
 
-                    if (wordsLanguage != Constants.LANGUAGE_EN) {
-                        wordsLanguage = Constants.LANGUAGE_EN
-                        wordsViewModel.loadAllWordsByLanguage(wordsLanguage)
+                    if (wordsViewModel.wordsLanguage != Constants.LANGUAGE_EN) {
+                        wordsViewModel.wordsLanguage = Constants.LANGUAGE_EN
+                        wordsViewModel.loadAllWordsByLanguage(wordsViewModel.wordsLanguage)
                     }
                     return@OnMenuItemClickListener true
                 }
                 R.id.ru_en -> {
-                    if (wordsLanguage != Constants.LANGUAGE_RU) {
-                        wordsLanguage = Constants.LANGUAGE_RU
-                        wordsViewModel.loadAllWordsByLanguage(wordsLanguage)
+                    if (wordsViewModel.wordsLanguage != Constants.LANGUAGE_RU) {
+                        wordsViewModel.wordsLanguage = Constants.LANGUAGE_RU
+                        wordsViewModel.loadAllWordsByLanguage(wordsViewModel.wordsLanguage)
                     }
                     return@OnMenuItemClickListener true
                 }
@@ -84,9 +87,33 @@ class WordsFragment : Fragment() {
             }
         })
 
-        if (savedInstanceState == null) {
-            wordsViewModel.loadAllWordsByLanguage(wordsLanguage)
+//        search
+
+        searchViewWords.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                wordsViewModel.searsNewWords(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                wordsViewModel.searsNewWords(newText)
+                return true
+            }
+        })
+
+        searchViewWords.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+            }
         }
+
+        searchViewWords.setOnCloseListener {
+            searchViewWordsClearFocus()
+            wordsViewModel.loadAllWordsByLanguage(wordsViewModel.wordsLanguage)
+            true
+        }
+
+//        display words
 
         recyclerWords.layoutManager = LinearLayoutManager(activity)
         recyclerWords.adapter = wordsAdapter
@@ -105,9 +132,9 @@ class WordsFragment : Fragment() {
         })
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putString(LANGUAGE_KEY, wordsLanguage)
+    private fun searchViewWordsClearFocus() {
+        searchViewWords.setQuery("", false)
+        searchViewWords.clearFocus()
+        searchViewWords.onActionViewCollapsed()
     }
 }

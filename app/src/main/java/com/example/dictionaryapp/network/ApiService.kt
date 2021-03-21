@@ -11,4 +11,10 @@ interface ApiService {
     fun loadAllWordsByLanguage(
         @Query("language") language: String
     ): Single<List<Word>>
+
+    @GET("word/language")
+    fun searchWords(
+        @Query("language") language: String,
+        @Query("phrase") phrase: String
+    ): Single<List<Word>>
 }

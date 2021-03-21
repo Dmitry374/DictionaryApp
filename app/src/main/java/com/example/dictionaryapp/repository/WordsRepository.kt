@@ -11,4 +11,11 @@ class WordsRepository(
     fun loadAllWordsByLanguage(language: String): Single<List<Word>> {
         return apiService.loadAllWordsByLanguage(language)
     }
+
+    fun searchWords(language: String, query: String): Single<List<Word>> {
+        return apiService.searchWords(
+            language = language,
+            phrase = query
+        )
+    }
 }

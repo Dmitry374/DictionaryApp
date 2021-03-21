@@ -15,4 +15,13 @@ class WordsInteractor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
+
+    fun searchWords(language: String, query: String): Single<List<Word>> {
+        return wordsRepository.searchWords(
+            language = language,
+            query = query
+        )
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 }

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">DictionaryApp</string>
 
-    <string name="empty_words_list">На данный момент в словаре нет записей</string>
+    <string name="empty_words_list">Список слов пуст</string>
 
     <string name="words">Слова</string>
     <string name="translate">Перевод</string>
