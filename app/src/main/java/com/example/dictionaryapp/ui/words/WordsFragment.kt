@@ -9,9 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dictionaryapp.App
 import com.example.dictionaryapp.R
 import com.example.dictionaryapp.common.Constants
+import com.example.dictionaryapp.ui.adapter.WordsAdapter
+import kotlinx.android.synthetic.main.fragment_words.*
 import javax.inject.Inject
 
 class WordsFragment : Fragment() {
@@ -21,6 +24,10 @@ class WordsFragment : Fragment() {
 
     private val wordsViewModel: WordsViewModel by viewModels {
         viewModelFactory
+    }
+
+    private val wordsAdapter = WordsAdapter { word ->
+
     }
 
     override fun onAttach(context: Context) {
@@ -40,11 +47,21 @@ class WordsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        wordsViewModel.loadAllWordsByLanguage(Constants.LANGUAGE_EN)
+        if (savedInstanceState == null) {
+            wordsViewModel.loadAllWordsByLanguage(Constants.LANGUAGE_EN)
+        }
+
+        recyclerWords.layoutManager = LinearLayoutManager(activity)
+        recyclerWords.adapter = wordsAdapter
 
         wordsViewModel.words.observe(viewLifecycleOwner, Observer {
             it?.let { words ->
-
+                if (words.isEmpty()) {
+                    emptyWordsListMessage.visibility = View.VISIBLE
+                } else {
+                    emptyWordsListMessage.visibility = View.GONE
+                    wordsAdapter.submitList(words)
+                }
             }
         })
     }
