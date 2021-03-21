@@ -1,13 +1,16 @@
-package com.example.dictionaryapp
+package com.example.dictionaryapp.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.dictionaryapp.R
+import com.example.dictionaryapp.ui.words.WordsFragment
 
 class MainActivity : AppCompatActivity() {
 
     private val fragmentManager = supportFragmentManager
 
-    private val moviesFragment = WordsFragment()
+    private val moviesFragment =
+        WordsFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
