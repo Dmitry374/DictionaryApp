@@ -4,6 +4,7 @@ import com.example.dictionaryapp.BuildConfig
 import com.example.dictionaryapp.common.Constants
 import com.example.dictionaryapp.domain.WordsInteractor
 import com.example.dictionaryapp.network.ApiService
+import com.example.dictionaryapp.repository.WordsRepository
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -47,7 +48,13 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideWordsInteractor(): WordsInteractor {
-        return WordsInteractor()
+    fun provideMovieRepository(apiService: ApiService): WordsRepository {
+        return WordsRepository(apiService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideWordsInteractor(wordsRepository: WordsRepository): WordsInteractor {
+        return WordsInteractor(wordsRepository)
     }
 }
