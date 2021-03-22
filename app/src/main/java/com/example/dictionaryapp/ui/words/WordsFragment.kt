@@ -12,12 +12,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dictionaryapp.App
 import com.example.dictionaryapp.R
 import com.example.dictionaryapp.common.Constants
+import com.example.dictionaryapp.model.Word
 import com.example.dictionaryapp.ui.communication.AddNewWordCommunication
 import com.example.dictionaryapp.ui.communication.FragmentCommunicationInterface
+import com.example.dictionaryapp.ui.words.adapter.WordItemTouchHelperAdapter
+import com.example.dictionaryapp.ui.words.adapter.WordItemTouchHelperCallback
+import com.example.dictionaryapp.ui.words.adapter.WordListener
 import com.example.dictionaryapp.ui.words.adapter.WordsAdapter
 import kotlinx.android.synthetic.main.fragment_words.*
 import javax.inject.Inject
@@ -33,7 +38,13 @@ class WordsFragment : Fragment(), AddNewWordCommunication {
 
     private var fragmentCommunicationInterface: FragmentCommunicationInterface? = null
 
-    private val wordsAdapter = WordsAdapter { word ->
+    private val wordListener = object : WordListener {
+        override fun deleteWord(word: Word) {
+            wordsViewModel.deleteWord(word.id)
+        }
+    }
+
+    private val wordsAdapter = WordsAdapter(wordListener) { word ->
         inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
         fragmentCommunicationInterface?.onOpenWordTranslate(word)
     }
@@ -79,6 +90,7 @@ class WordsFragment : Fragment(), AddNewWordCommunication {
 
                     if (wordsViewModel.wordsLanguage != Constants.LANGUAGE_EN) {
                         wordsViewModel.wordsLanguage = Constants.LANGUAGE_EN
+                        wordsAdapter.submitList(listOf())
                         wordsViewModel.loadAllWordsByLanguage(wordsViewModel.wordsLanguage)
                     }
                     return@OnMenuItemClickListener true
@@ -86,6 +98,7 @@ class WordsFragment : Fragment(), AddNewWordCommunication {
                 R.id.ru_en -> {
                     if (wordsViewModel.wordsLanguage != Constants.LANGUAGE_RU) {
                         wordsViewModel.wordsLanguage = Constants.LANGUAGE_RU
+                        wordsAdapter.submitList(listOf())
                         wordsViewModel.loadAllWordsByLanguage(wordsViewModel.wordsLanguage)
                     }
                     return@OnMenuItemClickListener true
@@ -131,6 +144,13 @@ class WordsFragment : Fragment(), AddNewWordCommunication {
         recyclerWords.layoutManager = LinearLayoutManager(activity)
         recyclerWords.adapter = wordsAdapter
 
+        val callback =
+            WordItemTouchHelperCallback(
+                wordsAdapter as WordItemTouchHelperAdapter
+            )
+        val itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper.attachToRecyclerView(recyclerWords)
+
         wordsViewModel.words.observe(viewLifecycleOwner, Observer {
             it?.let { words ->
                 if (words.isEmpty()) {
@@ -144,10 +164,26 @@ class WordsFragment : Fragment(), AddNewWordCommunication {
             }
         })
 
+//        add new word
+
         wordsViewModel.newWord.observe(viewLifecycleOwner, Observer {
             it?.let { word ->
+
+                emptyWordsListMessage.visibility = View.GONE
+                recyclerWords.visibility = View.VISIBLE
+
                 val wordsList = wordsAdapter.getItems().toMutableList()
                 wordsList.add(word)
+                wordsAdapter.submitList(wordsList)
+            }
+        })
+
+//        delete word
+
+        wordsViewModel.deletedWord.observe(viewLifecycleOwner, Observer {
+            it?.let { word ->
+                val wordsList = wordsAdapter.getItems().toMutableList()
+                wordsList.remove(word)
                 wordsAdapter.submitList(wordsList)
             }
         })

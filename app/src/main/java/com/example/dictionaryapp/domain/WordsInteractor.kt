@@ -45,4 +45,10 @@ class WordsInteractor(
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
+
+    fun deleteWord(id: Int): Single<Word> {
+        return wordsRepository.deleteWord(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 }

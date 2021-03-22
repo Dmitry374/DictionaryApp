@@ -30,6 +30,10 @@ class WordsViewModel @Inject constructor(
     val newWord: LiveData<Word>
         get() = _newWord
 
+    private val _deletedWord by lazy { MutableLiveData<Word>() }
+    val deletedWord: LiveData<Word>
+        get() = _deletedWord
+
     fun searsNewWords(newText: String) {
         searchSubject.onNext(newText)
     }
@@ -75,6 +79,17 @@ class WordsViewModel @Inject constructor(
             )
                 .subscribe({ newWord ->
                     _newWord.value = newWord
+                }, {
+
+                })
+        )
+    }
+
+    fun deleteWord(id: Int) {
+        compositeDisposable.add(
+            wordsInteractor.deleteWord(id)
+                .subscribe({ word ->
+                    _deletedWord.value = word
                 }, {
 
                 })

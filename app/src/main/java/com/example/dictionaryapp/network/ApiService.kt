@@ -30,4 +30,7 @@ interface ApiService {
         @Path("wordId") wordId: Int,
         @Path("translateId") translateId: Int
     ): Single<Word>
+
+    @DELETE("word/{id}")
+    fun deleteWord(@Path("id") id: Int): Single<Word>
 }

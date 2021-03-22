@@ -35,4 +35,8 @@ class WordsRepository(
             translateId = translateId
         )
     }
+
+    fun deleteWord(id: Int): Single<Word> {
+        return apiService.deleteWord(id)
+    }
 }

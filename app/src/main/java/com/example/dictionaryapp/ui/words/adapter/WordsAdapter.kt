@@ -10,8 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dictionaryapp.R
 import com.example.dictionaryapp.model.Word
 
-class WordsAdapter(private val clickWordListener: (Word) -> Unit) :
-    RecyclerView.Adapter<WordsAdapter.WordsViewHolder>() {
+class WordsAdapter(
+    private val wordListener: WordListener,
+    private val clickWordListener: (Word) -> Unit
+) :
+    RecyclerView.Adapter<WordsAdapter.WordsViewHolder>(), WordItemTouchHelperAdapter {
 
     private val differ = AsyncListDiffer(this, DIFF_CALLBACK)
 
@@ -25,6 +28,11 @@ class WordsAdapter(private val clickWordListener: (Word) -> Unit) :
 
     fun getItems(): MutableList<Word> {
         return differ.currentList
+    }
+
+    override fun onItemDismiss(position: Int) {
+        val word = differ.currentList[position]
+        wordListener.deleteWord(word)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordsViewHolder {
