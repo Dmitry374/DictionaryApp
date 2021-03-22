@@ -6,6 +6,7 @@ import com.example.dictionaryapp.R
 import com.example.dictionaryapp.model.Word
 import com.example.dictionaryapp.ui.communication.FragmentCommunicationInterface
 import com.example.dictionaryapp.ui.translate.TranslateFragment
+import com.example.dictionaryapp.ui.translate.addtranslate.AddNewTranslateDialogFragment
 import com.example.dictionaryapp.ui.words.WordsFragment
 import com.example.dictionaryapp.ui.words.addword.AddNewWordDialogFragment
 
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity(), FragmentCommunicationInterface {
 
     companion object {
         private const val ADD_NEW_WORD = "add_new_word"
+        private const val ADD_NEW_TRANSLATE = "add_new_translate"
     }
 
     private val fragmentManager = supportFragmentManager
@@ -20,7 +22,11 @@ class MainActivity : AppCompatActivity(), FragmentCommunicationInterface {
     private val wordsFragment =
         WordsFragment()
 
+    private lateinit var translateFragment: TranslateFragment
+
     private val addNewWordDialogFragment = AddNewWordDialogFragment()
+
+    private val addNewTranslateDialogFragment = AddNewTranslateDialogFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +40,11 @@ class MainActivity : AppCompatActivity(), FragmentCommunicationInterface {
     }
 
     override fun onOpenWordTranslate(word: Word) {
+
+        translateFragment = TranslateFragment.newInstance(word)
+
         fragmentManager.beginTransaction()
-            .add(R.id.nav_host_container, TranslateFragment.newInstance(word))
+            .add(R.id.nav_host_container, translateFragment)
             .addToBackStack(null)
             .commit()
     }
@@ -46,5 +55,13 @@ class MainActivity : AppCompatActivity(), FragmentCommunicationInterface {
 
     override fun onAddNewWord(word: String, translate: String) {
         wordsFragment.onAddNewWord(word, translate)
+    }
+
+    override fun showAddNewTranslateDialog() {
+        addNewTranslateDialogFragment.show(fragmentManager, ADD_NEW_TRANSLATE)
+    }
+
+    override fun onAddNewTranslate(translate: String) {
+        translateFragment.onAddNewTranslate(translate)
     }
 }

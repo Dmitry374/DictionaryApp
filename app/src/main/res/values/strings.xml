@@ -12,6 +12,8 @@
     <string name="ru_en">Русско-английский словарь</string>
 
     <string name="title_add_new_word">Добавить слово</string>
+    <string name="title_add_new_translate">Добавить перевод</string>
 
     <string name="input_word">Введите слово</string>
+    <string name="input_translate">Введите перевод</string>
 </resources>

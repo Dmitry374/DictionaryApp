@@ -1,5 +1,6 @@
 package com.example.dictionaryapp.di
 
+import com.example.dictionaryapp.ui.translate.TranslateFragment
 import com.example.dictionaryapp.ui.words.WordsFragment
 import dagger.Component
 import javax.inject.Singleton
@@ -9,4 +10,6 @@ import javax.inject.Singleton
 interface AppComponent {
 
     fun inject(moviesFragment: WordsFragment)
+
+    fun inject(translateFragment: TranslateFragment)
 }

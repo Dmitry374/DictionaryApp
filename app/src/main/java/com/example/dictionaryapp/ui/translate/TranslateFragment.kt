@@ -1,5 +1,6 @@
 package com.example.dictionaryapp.ui.translate
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,13 +9,19 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dictionaryapp.App
 import com.example.dictionaryapp.R
 import com.example.dictionaryapp.model.Word
+import com.example.dictionaryapp.ui.communication.AddNewTranslateCommunication
+import com.example.dictionaryapp.ui.communication.FragmentCommunicationInterface
 import com.example.dictionaryapp.ui.translate.adapter.TranslateAdapter
 import kotlinx.android.synthetic.main.fragment_translate.*
+import javax.inject.Inject
 
-class TranslateFragment : Fragment() {
+class TranslateFragment : Fragment(), AddNewTranslateCommunication {
 
     companion object {
 
@@ -28,7 +35,28 @@ class TranslateFragment : Fragment() {
             }
     }
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val translateViewModel: TranslateViewModel by viewModels {
+        viewModelFactory
+    }
+
     private val translateAdapter = TranslateAdapter()
+
+    private lateinit var word: Word
+
+    private var fragmentCommunicationInterface: FragmentCommunicationInterface? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as App).appComponent.inject(this)
+
+        if (context is FragmentCommunicationInterface) {
+            fragmentCommunicationInterface = context
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,13 +79,31 @@ class TranslateFragment : Fragment() {
             requireActivity().onBackPressed()
         }
 
+        toolbar.inflateMenu(R.menu.translate_menu)
+
+        toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.add_translate -> {
+                    fragmentCommunicationInterface?.showAddNewTranslateDialog()
+                    return@OnMenuItemClickListener true
+                }
+                else -> {
+                    return@OnMenuItemClickListener true
+                }
+            }
+        })
+
         recyclerTranslate.layoutManager = LinearLayoutManager(activity)
         recyclerTranslate.adapter = translateAdapter
 
-        val word = requireArguments().getParcelable<Word>(ARG_WORD) as Word
+        word = requireArguments().getParcelable<Word>(ARG_WORD) as Word
 
         originalWord.text = word.phrase
 
         translateAdapter.submitList(word.translates)
+    }
+
+    override fun onAddNewTranslate(translate: String) {
+
     }
 }
