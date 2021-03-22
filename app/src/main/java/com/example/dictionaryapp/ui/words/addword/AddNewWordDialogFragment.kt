@@ -53,6 +53,10 @@ class AddNewWordDialogFragment : DialogFragment() {
                     word = newWord.text.toString(),
                     translate = newTranslate.text.toString()
                 )
+
+                newWord.text.clear()
+                newTranslate.text.clear()
+
                 dismiss()
             }
         }

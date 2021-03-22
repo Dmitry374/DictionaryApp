@@ -143,6 +143,14 @@ class WordsFragment : Fragment(), AddNewWordCommunication {
                 }
             }
         })
+
+        wordsViewModel.newWord.observe(viewLifecycleOwner, Observer {
+            it?.let { word ->
+                val wordsList = wordsAdapter.getItems().toMutableList()
+                wordsList.add(word)
+                wordsAdapter.submitList(wordsList)
+            }
+        })
     }
 
     private fun searchViewWordsClearFocus() {
@@ -152,6 +160,6 @@ class WordsFragment : Fragment(), AddNewWordCommunication {
     }
 
     override fun onAddNewWord(word: String, translate: String) {
-
+        wordsViewModel.addNewWord(word, translate)
     }
 }

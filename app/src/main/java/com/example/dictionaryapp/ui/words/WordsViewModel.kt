@@ -26,6 +26,10 @@ class WordsViewModel @Inject constructor(
     val words: LiveData<List<Word>>
         get() = _words
 
+    private val _newWord by lazy { MutableLiveData<Word>() }
+    val newWord: LiveData<Word>
+        get() = _newWord
+
     fun searsNewWords(newText: String) {
         searchSubject.onNext(newText)
     }
@@ -56,6 +60,21 @@ class WordsViewModel @Inject constructor(
             wordsInteractor.loadAllWordsByLanguage(language)
                 .subscribe({ words ->
                     _words.value = words
+                }, {
+
+                })
+        )
+    }
+
+    fun addNewWord(word: String, translate: String) {
+        compositeDisposable.add(
+            wordsInteractor.addNewWord(
+                newWord = word,
+                newTranslate = translate,
+                language = wordsLanguage
+            )
+                .subscribe({ newWord ->
+                    _newWord.value = newWord
                 }, {
 
                 })

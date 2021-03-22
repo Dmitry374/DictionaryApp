@@ -23,6 +23,10 @@ class WordsAdapter(private val clickWordListener: (Word) -> Unit) :
         differ.submitList(words)
     }
 
+    fun getItems(): MutableList<Word> {
+        return differ.currentList
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordsViewHolder {
         return WordsViewHolder(
             LayoutInflater.from(parent.context)
