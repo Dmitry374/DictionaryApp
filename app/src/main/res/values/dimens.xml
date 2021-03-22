@@ -3,9 +3,11 @@
     <dimen name="margin">16dp</dimen>
     <dimen name="small_margin">8dp</dimen>
     <dimen name="padding">16dp</dimen>
+    <dimen name="small_padding">8dp</dimen>
 
     <dimen name="word_item_text_size">16sp</dimen>
     <dimen name="original_word_text_size">18sp</dimen>
+    <dimen name="translate_word_text_size">16sp</dimen>
     <dimen name="empty_words_list_text_size">14sp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
 </resources>

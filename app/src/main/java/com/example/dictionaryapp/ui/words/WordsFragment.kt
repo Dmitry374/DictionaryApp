@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dictionaryapp.App
 import com.example.dictionaryapp.R
 import com.example.dictionaryapp.common.Constants
-import com.example.dictionaryapp.ui.adapter.WordsAdapter
 import com.example.dictionaryapp.ui.communication.FragmentCommunicationInterface
+import com.example.dictionaryapp.ui.words.adapter.WordsAdapter
 import kotlinx.android.synthetic.main.fragment_words.*
 import javax.inject.Inject
 

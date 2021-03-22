@@ -6,4 +6,5 @@
     android:layout_height="wrap_content"
     android:background="@color/purple_500"
     android:elevation="@dimen/toolbar_elevation"
+    android:theme="@style/ToolbarTheme"
     app:titleTextColor="@android:color/white" />

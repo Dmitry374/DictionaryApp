@@ -1,4 +1,4 @@
-package com.example.dictionaryapp.ui.adapter
+package com.example.dictionaryapp.ui.words.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -33,8 +33,8 @@ class WordsAdapter(private val clickWordListener: (Word) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: WordsViewHolder, position: Int) {
-        val photo = differ.currentList[position]
-        holder.bind(photo)
+        val word = differ.currentList[position]
+        holder.bind(word)
     }
 
     companion object {
