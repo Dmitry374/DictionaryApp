@@ -91,6 +91,7 @@ class WordsFragment : Fragment(), AddNewWordCommunication {
                     if (wordsViewModel.wordsLanguage != Constants.LANGUAGE_EN) {
                         wordsViewModel.wordsLanguage = Constants.LANGUAGE_EN
                         wordsAdapter.submitList(listOf())
+                        searchViewWordsClearFocus()
                         wordsViewModel.loadAllWordsByLanguage(wordsViewModel.wordsLanguage)
                     }
                     return@OnMenuItemClickListener true
@@ -99,6 +100,7 @@ class WordsFragment : Fragment(), AddNewWordCommunication {
                     if (wordsViewModel.wordsLanguage != Constants.LANGUAGE_RU) {
                         wordsViewModel.wordsLanguage = Constants.LANGUAGE_RU
                         wordsAdapter.submitList(listOf())
+                        searchViewWordsClearFocus()
                         wordsViewModel.loadAllWordsByLanguage(wordsViewModel.wordsLanguage)
                     }
                     return@OnMenuItemClickListener true
