@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(), FragmentCommunicationInterface {
             .commit()
     }
 
-    override fun addNewWord() {
+    override fun showAddNewWordDialog() {
         addNewWordDialogFragment.show(fragmentManager, ADD_NEW_WORD)
     }
 

@@ -1,6 +1,7 @@
 package com.example.dictionaryapp.domain
 
 import com.example.dictionaryapp.common.Constants
+import com.example.dictionaryapp.model.Translate
 import com.example.dictionaryapp.model.Word
 import com.example.dictionaryapp.network.request.NewItem
 import com.example.dictionaryapp.repository.WordsRepository
@@ -49,6 +50,23 @@ class WordsInteractor(
     fun deleteWord(id: Int): Single<Word> {
         return wordsRepository.deleteWord(id)
             .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun addNewTranslate(word: Word, newItem: NewItem): Single<List<Translate>> {
+        return wordsRepository.addTranslate(newItem)
+            .subscribeOn(Schedulers.io())
+            .flatMap { translate ->
+
+                wordsRepository.addTranslateToWord(
+                    wordId = word.id,
+                    translateId = translate.id
+                )
+                    .map { resultWord ->
+                        word.translates = resultWord.translates
+                        word.translates
+                    }
+            }
             .observeOn(AndroidSchedulers.mainThread())
     }
 }

@@ -10,6 +10,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dictionaryapp.App
@@ -101,9 +102,18 @@ class TranslateFragment : Fragment(), AddNewTranslateCommunication {
         originalWord.text = word.phrase
 
         translateAdapter.submitList(word.translates)
+
+        translateViewModel.newTranslate.observe(viewLifecycleOwner, Observer {
+            it?.let { translates ->
+                translateAdapter.submitList(translates)
+            }
+        })
     }
 
     override fun onAddNewTranslate(translate: String) {
-
+        translateViewModel.addNewTranslate(
+            word = word,
+            translate = translate
+        )
     }
 }

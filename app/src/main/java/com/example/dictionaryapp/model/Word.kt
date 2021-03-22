@@ -8,5 +8,5 @@ data class Word(
     val id: Int,
     val language: String,
     val phrase: String,
-    val translates: List<Translate>
+    var translates: List<Translate>
 ) : Parcelable

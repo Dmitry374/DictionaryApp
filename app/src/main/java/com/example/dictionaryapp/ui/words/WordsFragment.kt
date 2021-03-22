@@ -112,7 +112,7 @@ class WordsFragment : Fragment(), AddNewWordCommunication {
         })
 
         buttonAddNewWord.setOnClickListener {
-            fragmentCommunicationInterface?.addNewWord()
+            fragmentCommunicationInterface?.showAddNewWordDialog()
         }
 
 //        search
