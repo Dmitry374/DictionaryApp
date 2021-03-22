@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">DictionaryApp</string>
 
+    <string name="dictionary">Словарь</string>
+
     <string name="empty_words_list">Список слов пуст</string>
 
     <string name="words">Слова</string>

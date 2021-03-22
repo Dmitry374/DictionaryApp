@@ -17,6 +17,7 @@ import com.example.dictionaryapp.App
 import com.example.dictionaryapp.R
 import com.example.dictionaryapp.common.Constants
 import com.example.dictionaryapp.ui.adapter.WordsAdapter
+import com.example.dictionaryapp.ui.communication.FragmentCommunicationInterface
 import kotlinx.android.synthetic.main.fragment_words.*
 import javax.inject.Inject
 
@@ -29,8 +30,11 @@ class WordsFragment : Fragment() {
         viewModelFactory
     }
 
-    private val wordsAdapter = WordsAdapter { word ->
+    private var fragmentCommunicationInterface: FragmentCommunicationInterface? = null
 
+    private val wordsAdapter = WordsAdapter { word ->
+        inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
+        fragmentCommunicationInterface?.onOpenWordTranslate(word)
     }
 
     private val inputMethodManager: InputMethodManager by lazy {
@@ -41,6 +45,10 @@ class WordsFragment : Fragment() {
         super.onAttach(context)
 
         (requireActivity().application as App).appComponent.inject(this)
+
+        if (context is FragmentCommunicationInterface) {
+            fragmentCommunicationInterface = context
+        }
     }
 
     override fun onCreateView(
@@ -60,7 +68,7 @@ class WordsFragment : Fragment() {
         }
 
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-        toolbar.title = resources.getString(R.string.words)
+        toolbar.title = resources.getString(R.string.dictionary)
 
         toolbar.inflateMenu(R.menu.words_menu)
 
@@ -86,6 +94,10 @@ class WordsFragment : Fragment() {
                 }
             }
         })
+
+        buttonAddNewWord.setOnClickListener {
+
+        }
 
 //        search
 
