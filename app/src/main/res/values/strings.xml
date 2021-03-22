@@ -5,9 +5,13 @@
 
     <string name="empty_words_list">Список слов пуст</string>
 
-    <string name="words">Слова</string>
+    <string name="word">Слово</string>
     <string name="translate">Перевод</string>
 
     <string name="en_ru">Англо-русский словарь</string>
     <string name="ru_en">Русско-английский словарь</string>
+
+    <string name="title_add_new_word">Добавить слово</string>
+
+    <string name="input_word">Введите слово</string>
 </resources>

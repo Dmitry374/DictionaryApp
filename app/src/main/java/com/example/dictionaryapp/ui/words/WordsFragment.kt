@@ -16,12 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dictionaryapp.App
 import com.example.dictionaryapp.R
 import com.example.dictionaryapp.common.Constants
+import com.example.dictionaryapp.ui.communication.AddNewWordCommunication
 import com.example.dictionaryapp.ui.communication.FragmentCommunicationInterface
 import com.example.dictionaryapp.ui.words.adapter.WordsAdapter
 import kotlinx.android.synthetic.main.fragment_words.*
 import javax.inject.Inject
 
-class WordsFragment : Fragment() {
+class WordsFragment : Fragment(), AddNewWordCommunication {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -96,7 +97,7 @@ class WordsFragment : Fragment() {
         })
 
         buttonAddNewWord.setOnClickListener {
-
+            fragmentCommunicationInterface?.addNewWord()
         }
 
 //        search
@@ -148,5 +149,9 @@ class WordsFragment : Fragment() {
         searchViewWords.setQuery("", false)
         searchViewWords.clearFocus()
         searchViewWords.onActionViewCollapsed()
+    }
+
+    override fun onAddNewWord(word: String, translate: String) {
+
     }
 }
